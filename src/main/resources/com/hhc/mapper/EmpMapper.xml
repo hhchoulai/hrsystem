@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace去找同名接口-->
+<mapper namespace="com.hhc.mapper.EmpMapper">
+
+    <resultMap id="empdept" type="com.hhc.entity.Emp">
+        <id column="emp_id" property="empId"></id>
+        <result column="name" property="name"/>
+        <result column="age" property="age"/>
+        <result column="sex" property="sex"/>
+        <result column="salary" property="salary"/>
+        <result column="did" property="deptId"/>
+        <association property="dept" javaType="com.hhc.entity.Dept">
+            <id column="did" property="deptId"/>
+            <result column="dname" property="dname"/>
+            <result column="location" property="location"/>
+        </association>
+    </resultMap>
+
+    <select id="getEmpByEmpId" resultMap="empdept">
+        select emp_id,name,age,sex,salary,e.dept_id did,dname,location
+         from t_emp e left join t_dept d on e.dept_id=d.dept_id where emp_id=#{empId};
+    </select>
+
+    <select id="getEmpByName" resultMap="empdept">
+        select emp_id,name,age,sex,salary,dname from t_emp e,t_dept d where
+        e.dept_id=d.dept_id and name=#{name}
+    </select>
+
+    <!--查询全部-->
+    <select id="emplist" resultMap="empdept">
+        select emp_id,name,age,sex,salary,dname from t_emp e,t_dept d where
+        e.dept_id=d.dept_id
+    </select>
+
+    <delete id="deleteEmpById">
+        delete from t_emp where emp_id=#{empId}
+    </delete>
+
+    <update id="updateEmpById">
+        update t_emp set name=#{name},age=#{age},sex=#{sex},salary=#{salary},dept_id=#{deptId}
+        where emp_id=#{empId};
+    </update>
+    
+    <insert id="addEmp">
+        insert into t_emp(name,age,sex,salary,dept_id) values (#{name},#{age},#{sex},#{salary},#{deptId});
+    </insert>
+</mapper>

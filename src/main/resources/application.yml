@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    active: dev
+pagehelper:
+  helper-dialect: mysql
